@@ -1,4 +1,9 @@
-let storedValue = null, currentValue = "", operator = null;
+let storedValue = null;
+let currentValue = "";
+let operator = null;
+
+let lastOperator = null;
+let lastOperand = null;
 
 function updateDisplay(text) {
     const display = document.querySelector(".display");
@@ -75,13 +80,21 @@ function handleInput(button) {
             operator = button;
             break;
         case "=":
-            if (currentValue) {
+            if (operator && currentValue) {
                 if (currentValue.startsWith(".")) {
                     currentValue = "0" + currentValue;
                 }
                 storedValue = operate(storedValue, parseFloat(currentValue), operator);
                 updateDisplay(storedValue);
-                clear();
+                
+                lastOperator = operator;
+                lastOperand = currentValue;
+
+                operator = null;
+                currentValue = "";
+            } else if (lastOperator && lastOperand) {
+                storedValue = operate(storedValue, parseFloat(lastOperand), lastOperator);
+                updateDisplay(storedValue);
             }
             break;
         default:
@@ -100,12 +113,11 @@ buttons.forEach((button) => {
 });
 
 function handleKeyboardInput(e) {
-    console.log(e.key);
     if (e.key == "Backspace") {
         handleInput("DEL");
     } else if (e.key == "Enter") {
         handleInput("=");
-    } else if ((e.key >= "0" && e.key <= "9") || e.key == ".") {
+    } else if ((e.key >= "0" && e.key <= "9") || e.key == "." || e.key == "+" || e.key == "-" || e.key == "*" || e.key == "/" || e.key == "=") {
         handleInput(e.key);
     }
 }
