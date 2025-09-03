@@ -29,3 +29,19 @@ function operate(num1, num2, op) {
             break;
     }
 }
+
+const display = document.querySelector(".display")
+function handleInput(text) {
+    switch (text) {
+        default:
+            display.textContent += text;
+            break;
+    }
+}
+
+const buttons = document.querySelectorAll("button");
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        handleInput(button.textContent);
+    });
+});
