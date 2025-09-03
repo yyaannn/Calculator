@@ -31,13 +31,13 @@ function divide(a, b) {
 
 function operate(num1, num2, op) {
     switch (op) {
-        case "＋":
+        case "+":
             return add(num1, num2);
-        case "－":
+        case "-":
             return subtract(num1, num2);
-        case "×":
+        case "*":
             return multiply(num1, num2);
-        case "÷":
+        case "/":
             return divide(num1, num2);
     }
 }
@@ -53,10 +53,10 @@ function handleInput(button) {
             currentValue = currentValue.slice(0, -1);
             updateDisplay(currentValue);
             break;
-        case "＋":
-        case "－":
-        case "×":
-        case "÷":
+        case "+":
+        case "-":
+        case "*":
+        case "/":
             if (currentValue) {
                 if (!storedValue) {
                     storedValue = parseFloat(currentValue);
@@ -74,7 +74,7 @@ function handleInput(button) {
 
             operator = button;
             break;
-        case "＝":
+        case "=":
             if (currentValue) {
                 if (currentValue.startsWith(".")) {
                     currentValue = "0" + currentValue;
@@ -95,6 +95,18 @@ function handleInput(button) {
 const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
-        handleInput(button.textContent);
+        handleInput(button.id);
     });
 });
+
+function handleKeyboardInput(e) {
+    console.log(e.key);
+    if (e.key == "Backspace") {
+        handleInput("DEL");
+    } else if (e.key == "Enter") {
+        handleInput("=");
+    } else if ((e.key >= "0" && e.key <= "9") || e.key == ".") {
+        handleInput(e.key);
+    }
+}
+document.addEventListener("keydown", handleKeyboardInput);
