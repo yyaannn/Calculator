@@ -33,6 +33,12 @@ function operate(num1, num2, op) {
 const display = document.querySelector(".display")
 function handleInput(text) {
     switch (text) {
+        case "AC":
+            display.textContent = "";
+            break;
+        case "DEL":
+            display.textContent = display.textContent.slice(0, -1);
+            break;
         default:
             display.textContent += text;
             break;
