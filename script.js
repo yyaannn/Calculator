@@ -1,3 +1,16 @@
+let storedValue = null, currentValue = "", operator = null;
+
+function updateDisplay(text) {
+    const display = document.querySelector(".display");
+    display.textContent = text;
+}
+
+function clear() {
+    storedValue = null;
+    currentValue = "";
+    operator = null;
+}
+
 function add(a, b) {
     return a + b;
 }
@@ -10,37 +23,71 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
+    if (b == 0) {
+        return "Error!";
+    }
     return a / b;
 }
 
 function operate(num1, num2, op) {
     switch (op) {
         case "＋":
-            add(num1, num2);
-            break;
+            return add(num1, num2);
         case "－":
-            subtract(num1, num2);
-            break;
+            return subtract(num1, num2);
         case "×":
-            multiply(num1, num2);
-            break;
+            return multiply(num1, num2);
         case "÷":
-            divide(num1, num2);
-            break;
+            return divide(num1, num2);
     }
 }
 
-const display = document.querySelector(".display")
-function handleInput(text) {
-    switch (text) {
+
+function handleInput(button) {
+    switch (button) {
         case "AC":
-            display.textContent = "";
+            clear();
+            updateDisplay("");
             break;
         case "DEL":
-            display.textContent = display.textContent.slice(0, -1);
+            currentValue = currentValue.slice(0, -1);
+            updateDisplay(currentValue);
+            break;
+        case "＋":
+        case "－":
+        case "×":
+        case "÷":
+            if (currentValue) {
+                if (!storedValue) {
+                    storedValue = parseFloat(currentValue);
+                } else {
+                    if (currentValue.startsWith(".")) {
+                        currentValue = "0" + currentValue;
+                    }
+                    storedValue = operate(storedValue, parseFloat(currentValue), operator);
+                }
+
+                currentValue = "";
+                updateDisplay(storedValue);
+                if (storedValue == "Error!") clear();
+            }
+
+            operator = button;
+            break;
+        case "＝":
+            if (currentValue) {
+                if (currentValue.startsWith(".")) {
+                    currentValue = "0" + currentValue;
+                }
+                storedValue = operate(storedValue, parseFloat(currentValue), operator);
+                updateDisplay(storedValue);
+                clear();
+            }
             break;
         default:
-            display.textContent += text;
+            if (button == "." && currentValue.includes(".")) return;
+            currentValue += button;
+            updateDisplay(currentValue);
             break;
     }
 }
